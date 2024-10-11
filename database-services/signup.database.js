@@ -9,7 +9,7 @@ export const insertDoctor = async(doctorId,doctorName,workingIn,district,area) =
         return true;
     } catch (error) {
         console.log(error)
-        console.log("Error in insert doctor into DB");
+        console.log("Error in inserting doctor into DB");
         return false;
     }
 }

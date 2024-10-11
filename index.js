@@ -9,7 +9,7 @@ app.use(express.json());
 
 //Login
 app.post('/signup',registerDoctor)
-app.post('/login',login)
+app.get('/login',login)
 
 //CASES
 app.post('/addNewCase',registerNewCase);
