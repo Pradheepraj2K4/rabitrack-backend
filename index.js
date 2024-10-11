@@ -3,8 +3,13 @@ import { configDotenv } from 'dotenv';
 configDotenv();
 const app = express();
 import {getAbstractCaseDetails, getFullCaseDetails, registerNewCase} from './controllers/cases.controller.js';
-import { getAllCaseDetails, getCaseCount, getRecentCasesByDistrict, getReport } from './controllers/report.controller.js';
+import {getCaseCount, getRecentCasesByDistrict, getReport } from './controllers/report.controller.js';
+import { login, registerDoctor } from './controllers/signup.controller.js';
 app.use(express.json());
+
+//Login
+app.post('/signup',registerDoctor)
+app.post('/login',login)
 
 //CASES
 app.post('/addNewCase',registerNewCase);
