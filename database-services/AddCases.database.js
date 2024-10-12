@@ -28,7 +28,9 @@ export async function addCase(doctorId,attackerId,victimId,pincode,district,atta
     VALUES(get_case_id(),DATE_FORMAT(CURDATE(),'%d-%m-%Y'),?,?,?,?,?,?)`
     try {
         await db.query(SQL,[attackDate,doctorId,attackerId,victimId,district,pincode])
+        return true
     } catch (error) {
         console.log("error inserting caseDetails onto case table " + error)
+        return false
     }
 }

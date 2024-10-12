@@ -1,11 +1,13 @@
 import express from 'express';
 import { configDotenv } from 'dotenv';
-configDotenv();
-const app = express();
+import cors from "cors";
 import {getAbstractCaseDetails, getFullCaseDetails, registerNewCase} from './controllers/cases.controller.js';
 import {getCaseCount, getRecentCasesByDistrict, getReport } from './controllers/report.controller.js';
 import { login, registerDoctor } from './controllers/signup.controller.js';
+configDotenv();
+const app = express();
 app.use(express.json());
+app.use(cors());
 
 //Login
 app.post('/signup',registerDoctor)

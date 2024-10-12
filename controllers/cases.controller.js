@@ -25,8 +25,10 @@ export const registerNewCase = async(req,res) => {
             await addNewVictim(victimId,req.body.victim);
 
             //reqister a new case with the generated attackerId and victimId
-            await addCase(req.body.doctorId,attackerId,victimId,req.body.pincode,req.body.district,req.body.attackDate);
-            res.send({Success : true});
+            if(await addCase(req.body.doctorId,attackerId,victimId,req.body.pincode,req.body.district,req.body.attackDate))
+                res.send({Success : true});
+            else    
+                res.send({Success : false});
 
         } catch (error) {
             console.log(error)

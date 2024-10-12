@@ -38,11 +38,11 @@ export const getAllCaseDetails = async(req,res) => {
 
 export const getReport = async (req,res) => {
     try {
-        const records = await fetchReport();
+        const records = await fetchReport(); // returns false in case of error
         if(records)
             res.send(records)
         else
-            res.send({Succcess : false})
+            res.send({Succcess : false,error : "Unexpected error occured during fetching the report"})
     } catch (error) {
         console.log(error)
     }
@@ -55,9 +55,9 @@ export const getRecentCasesByDistrict = async(req,res) => {
         if(records.length > 0)
             res.send(records)
         else
-            res.send({Success : false});
+            res.send({Success : false, error : "No cases found with the district : " + district});
     } catch (error) {
         console.log("error in fetching cases by district : " + error);
-        res.send({Success : false});
+        res.send({Success : false,error : "Unexpected error occured during fetching the data"});
     }
 }

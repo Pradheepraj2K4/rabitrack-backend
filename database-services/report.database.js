@@ -5,9 +5,14 @@ export const getCasesCountfromDB = async() => {
      as count 
      FROM cases 
      GROUP BY district`
-
-     const [records] = await db.query(SQL);
-     return records;
+    try {
+        const [records] = await db.query(SQL);
+        return records;
+    } catch (error) {
+        console.log(error)
+        console.log("error fetching case count")
+        return false;
+    }
 }
 
 //Not Used
