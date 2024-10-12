@@ -22,10 +22,30 @@ export async function addNewAttacker(attackerId,attacker) {
     }
 }
 
+export async function deleteAttacker(attackerId){
+    const SQL = `DELETE FROM attackers
+    WHERE attacker_id = ?`
+    try {
+        await db.query(SQL,[attackerId]);
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function deleteVictim(victimId){
+    const SQL = `DELETE FROM attackers
+    WHERE victim_id = ?`
+    try {
+        await db.query(SQL,[victimId]);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 //create a new entry in the case table with the attacker id and victim id
 export async function addCase(doctorId,attackerId,victimId,pincode,district,attackDate){
     const SQL = `INSERT INTO cases
     VALUES(get_case_id(),DATE_FORMAT(CURDATE(),'%d-%m-%Y'),?,?,?,?,?,?)`
+    console.log(attackDate)
     try {
         await db.query(SQL,[attackDate,doctorId,attackerId,victimId,district,pincode])
         return true

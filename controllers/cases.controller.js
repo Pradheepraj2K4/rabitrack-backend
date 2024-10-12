@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getFullCaseDetailsByCaseId,getCaseDetailsByDoctorId } from "../database-services/GetCases.database.js";
-import { addNewAttacker,addNewVictim,addCase } from "../database-services/AddCases.database.js";
+import { addNewAttacker,addNewVictim,addCase, deleteAttacker, deleteVictim } from "../database-services/AddCases.database.js";
 
+//return only the list of attackerId,attacker-species,victim-species,attack date
 export const getAbstractCaseDetails = async(req,res) => {
     const doctorId = req.params.doctorId;
     try{
@@ -9,7 +10,7 @@ export const getAbstractCaseDetails = async(req,res) => {
         if(cases.length>0)
             res.send(cases);
         else
-            res.status(404).send({Success : false});
+            res.status(404).send({error : "No cases were found"});
     }
     catch(error){
         console.log("Error occured while getting case details - from cases.controller file : " + error);
@@ -27,12 +28,16 @@ export const registerNewCase = async(req,res) => {
             //reqister a new case with the generated attackerId and victimId
             if(await addCase(req.body.doctorId,attackerId,victimId,req.body.pincode,req.body.district,req.body.attackDate))
                 res.send({Success : true});
-            else    
-                res.send({Success : false});
+            else{
+                //delete the attacker and victim if it is already inserted and the issue is only with the case table
+                await deleteAttacker(attackerId);
+                await deleteVictim(victimId);
+                res.send({Success : false,error : "Failed to add cases"});
+            }    
 
         } catch (error) {
             console.log(error)
-            res.send({Success : false});
+            res.send({Success : false,error : "unexpected error occured!"});
         }
 }
 
@@ -43,7 +48,7 @@ export const getFullCaseDetails = async(req,res) => {
         if(caseDetails)
             res.send(caseDetails);
         else
-            res.status(404).end();
+            res.status(404).send({error : "No case is found on the given case-ID"});
     }
     catch{
         console.log("Error occured while getting case details" + e);
