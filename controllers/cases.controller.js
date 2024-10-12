@@ -27,12 +27,12 @@ export const registerNewCase = async(req,res) => {
 
             //reqister a new case with the generated attackerId and victimId
             if(await addCase(req.body.doctorId,attackerId,victimId,req.body.pincode,req.body.district,req.body.attackDate))
-                res.send({Success : true});
+                return res.send({Success : true});
             else{
                 //delete the attacker and victim if it is already inserted and the issue is only with the case table
                 await deleteAttacker(attackerId);
                 await deleteVictim(victimId);
-                res.send({Success : false,error : "Failed to add cases"});
+                return res.status(400).send({Success : false,error : "Failed to add cases"});
             }    
 
         } catch (error) {

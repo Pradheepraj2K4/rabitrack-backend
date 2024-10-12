@@ -1,4 +1,5 @@
 import { db } from "./database.js"
+import { getDoctorDetails } from "./doctor.database.js";
 
 export const getCaseDetailsByDoctorId = async(doctorId) => {
 
@@ -26,7 +27,7 @@ export const getCaseDetailsByDoctorId = async(doctorId) => {
 
 export async function getFullCaseDetailsByCaseId(caseId){
     const SQL = `SELECT 
-    attacker_id,victim_id,district,pincode
+    attacker_id,victim_id,registered_by as doctor_id,district,pincode
     from cases
     WHERE cases.case_id = ?`
 
@@ -37,10 +38,12 @@ export async function getFullCaseDetailsByCaseId(caseId){
             return false
         const attackerDetails = await getAttackerDetails(record.attacker_id);
         const victimDetails = await getVictimDetails(record.victim_id);
+        const doctorDetails = await getDoctorDetails(record.doctor_id)
 
         return {
             attacker : attackerDetails,
             victim : victimDetails,
+            doctor : doctorDetails,
             district : record.district,
             pincode : record.pincode
         }

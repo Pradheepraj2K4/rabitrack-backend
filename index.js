@@ -2,7 +2,7 @@ import express from 'express';
 import { configDotenv } from 'dotenv';
 import cors from "cors";
 import {getAbstractCaseDetails, getFullCaseDetails, registerNewCase} from './controllers/cases.controller.js';
-import {getCaseCount, getRecentCasesByDistrict, getReport } from './controllers/report.controller.js';
+import {getCaseCount, getCasesByPincode, getRecentCasesByDistrict, getReport } from './controllers/report.controller.js';
 import { login, registerDoctor } from './controllers/signup.controller.js';
 configDotenv();
 const app = express();
@@ -13,7 +13,7 @@ app.use(cors());
 app.post('/signup',registerDoctor)
 app.get('/login',login)
 
-//CASES
+//ADD CASES
 app.post('/addNewCase',registerNewCase);
 app.get('/getCasesByDoctorId/:doctorId',getAbstractCaseDetails);
 app.get('/getCaseDetailsByCaseId/:caseId',getFullCaseDetails);
@@ -22,5 +22,6 @@ app.get('/getCaseDetailsByCaseId/:caseId',getFullCaseDetails);
 app.get('/getCaseCount',getCaseCount);
 app.get('/getAllCaseReport',getReport);
 app.get('/getCasesByDistrict/:district',getRecentCasesByDistrict);
+app.get('/getCasesByPincode/:pincode',getCasesByPincode)
 
 app.listen(process.env.PORT,() => console.log("Server is running at PORT : " + process.env.PORT))

@@ -18,7 +18,7 @@ export const getDoctorDetails = async(doctorId) => {
     const SQL = `SELECT * FROM doctors
     WHERE doctor_id = ?`
     try {
-        const records = db.query(SQL,[doctorId]);
+        const [[records]] = await db.query(SQL,[doctorId]);
         return records;
     } catch (error) {
         console.log("Error in fetching doctor details - db")

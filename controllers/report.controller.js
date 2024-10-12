@@ -1,4 +1,4 @@
-import { fetchAllCases, fetchRecentCasesByDistrict, fetchReport, getCasesCountfromDB } from "../database-services/report.database.js";
+import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, getCasesCountfromDB } from "../database-services/report.database.js";
 
 export const getCaseCount = async (req,res) => {
     try {
@@ -6,7 +6,7 @@ export const getCaseCount = async (req,res) => {
         return res.send(records)
     } catch (error) {
         console.log(error);
-        return res.send({Success : false, error : "Unable to fetch case count"})
+        return res.status(500).send({Success : false, error : "Unable to fetch case count"})
     }
 }
 
@@ -55,9 +55,23 @@ export const getRecentCasesByDistrict = async(req,res) => {
         if(records.length > 0)
             res.send(records)
         else
-            res.send({Success : false, error : "No cases were found with the district : " + district});
+            res.status(404).send({Success : false, error : "No cases were found with the district : " + district});
     } catch (error) {
         console.log("error in fetching cases by district : " + error);
         res.send({Success : false,error : "Unexpected error occured during fetching the data"});
+    }
+}
+
+export const getCasesByPincode = async(req,res) => {
+    const pincode = req.params.pincode;
+    try {
+        const cases = await fetchCasesByPincode(pincode);
+        if(cases.length>0)
+            return res.send(cases)
+        else
+            return res.status(404).send({error : "No cases were found on the given pincode"})
+    } catch (error) {
+        console.log(error)
+        return res.send({Succcess : false, error : "Unexpected error occured"})
     }
 }
