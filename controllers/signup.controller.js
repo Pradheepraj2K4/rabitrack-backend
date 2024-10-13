@@ -10,7 +10,7 @@ export const registerDoctor = async(req,res) => {
     try {
         //check if doctor is already registered
         const doctorDetails = await getDoctorDetails(doctorId);
-        if(doctorDetails.doctor_name) //doctor already registed
+        if(doctorDetails) //doctor already registed
             return res.status(409).send({Success : false, error : "doctor with the given ID is already registered"})
         if(await insertDoctor(doctorId,doctorName,workingIn,district,area))
             return res.send({Success : true})

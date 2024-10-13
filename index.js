@@ -13,7 +13,7 @@ app.use(cors());
 app.post('/signup',registerDoctor)
 app.get('/login',login)
 
-//ADD CASES
+//CASES
 app.post('/addNewCase',registerNewCase);
 app.get('/getCasesByDoctorId/:doctorId',getAbstractCaseDetails);
 app.get('/getCaseDetailsByCaseId/:caseId',getFullCaseDetails);
