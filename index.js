@@ -11,7 +11,7 @@ app.use(cors());
 
 //Login
 app.post('/signup',registerDoctor)
-app.get('/login',login)
+app.post('/login',login)
 
 //CASES
 app.post('/addNewCase',registerNewCase);

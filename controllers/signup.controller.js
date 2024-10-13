@@ -3,7 +3,7 @@ import { getDoctorDetails, insertDoctor } from "../database-services/doctor.data
 export const registerDoctor = async(req,res) => {
     const {doctorId,doctorName,workingIn,district,area} = req.body;
 
-    //returns if any of the input fields are empty
+    //returns if any of the input fields are undefined
     if(!(doctorId && doctorName && workingIn && district && area))
         return res.status(400).send({Success : false, error : "Missing fields - invalid data"})
 
