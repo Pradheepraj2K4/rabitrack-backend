@@ -1,8 +1,8 @@
-import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, getCasesCountfromDB } from "../database-services/report.database.js";
+import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, fetchCaseCount } from "../database-services/report.database.js";
 
 export const getCaseCount = async (req,res) => {
     try {
-        const records = await getCasesCountfromDB();
+        const records = await fetchCaseCount();
         return res.send(records)
     } catch (error) {
         console.log(error);

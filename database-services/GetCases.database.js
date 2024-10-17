@@ -1,7 +1,7 @@
 import { db } from "./database.js"
 import { getDoctorDetails } from "./doctor.database.js";
 
-export const getCaseDetailsByDoctorId = async(doctorId) => {
+export const fetchCaseDetailsByDoctorId = async(doctorId) => {
 
     //this query only retrives date and doctor_id from case table and retrieves species from attacker and victim table
     const SQL = `SELECT 
@@ -22,10 +22,11 @@ export const getCaseDetailsByDoctorId = async(doctorId) => {
         return records
     }catch(e){
         console.log("Error in fetching caseDetails by doctorId " + e);
+        return false
     }
 }
 
-export async function getFullCaseDetailsByCaseId(caseId){
+export async function fetchFullCaseDetailsById(caseId){
     const SQL = `SELECT 
     attacker_id,victim_id,registered_by as doctor_id,district,pincode
     from cases
@@ -36,6 +37,7 @@ export async function getFullCaseDetailsByCaseId(caseId){
         //if no record on that case id - just return false
         if(!record)
             return false
+        
         const attackerDetails = await getAttackerDetails(record.attacker_id);
         const victimDetails = await getVictimDetails(record.victim_id);
         const doctorDetails = await getDoctorDetails(record.doctor_id)

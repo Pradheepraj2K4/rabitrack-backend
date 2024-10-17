@@ -1,6 +1,6 @@
 import { db } from "./database.js";
 
-export const getCasesCountfromDB = async() => {
+export const fetchCaseCount = async() => {
     const SQL = `SELECT district,count(case_id)
      as count 
      FROM cases 
@@ -74,7 +74,8 @@ export const fetchReport = async() => {
     FROM cases
     INNER JOIN attackers ON cases.attacker_id = attackers.attacker_id
     INNER JOIN victims ON cases.victim_id = victims.victim_id
-    INNER JOIN doctors ON cases.registered_by = doctors.doctor_id`
+    INNER JOIN doctors ON cases.registered_by = doctors.doctor_id
+    ORDER BY cases.attack_date DESC`
 
     try {
         const [records] = await db.query(SQL);

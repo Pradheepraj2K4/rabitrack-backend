@@ -1,20 +1,24 @@
 import { v4 as uuidv4 } from 'uuid';
-import { getFullCaseDetailsByCaseId,getCaseDetailsByDoctorId } from "../database-services/GetCases.database.js";
+import { fetchFullCaseDetailsById,fetchCaseDetailsByDoctorId } from "../database-services/GetCases.database.js";
 import { addNewAttacker,addNewVictim,addCase, deleteAttacker, deleteVictim } from "../database-services/AddCases.database.js";
 
 //return only the list of attackerId,attacker-species,victim-species,attack date
 export const getAbstractCaseDetails = async(req,res) => {
     const doctorId = req.params.doctorId;
     try{
-        const cases = await getCaseDetailsByDoctorId(doctorId);
-        if(cases.length>0)
+        const cases = await fetchCaseDetailsByDoctorId(doctorId); //returns false if error fetching from DB
+        if(cases === false){
+            console.error("Error connecting DB - fetchCaseDetailsByDoctorId")
+            return res.send({Success: false, error : "Error occured, Please try again!"})
+        }
+        else if(cases.length>0)
             res.send(cases);
         else
             res.status(404).send({error : "No cases were found"});
     }
     catch(error){
-        console.log("Error occured while getting case details - from cases.controller file : " + error);
-        res.send({Success: false})
+        console.error("Error occured while getting case details - from cases.controller : " + error);
+        res.send({Success: false, error : "Error occured, Please try again!"})
     }
 }
 
@@ -26,7 +30,7 @@ export const registerNewCase = async(req,res) => {
             await addNewVictim(victimId,req.body.victim);
 
             //reqister a new case with the generated attackerId and victimId
-            if(await addCase(req.body.doctorId,attackerId,victimId,req.body.pincode,req.body.district,req.body.attackDate))
+            if(await addCase(req.body.doctorId,attackerId,victimId,req.body.pincode,req.body.district,req.body.attackDate)) //returns false if any error occurs at DB
                 return res.send({Success : true});
             else{
                 //delete the attacker and victim if it is already inserted and the issue is only with the case table
@@ -44,13 +48,13 @@ export const registerNewCase = async(req,res) => {
 export const getFullCaseDetails = async(req,res) => {
     const caseId = req.params.caseId;
     try{
-        const caseDetails = await getFullCaseDetailsByCaseId(caseId)
+        const caseDetails = await fetchFullCaseDetailsById(caseId) //returns false if no cases found on that case ID
         if(caseDetails)
             res.send(caseDetails);
         else
-            res.status(404).send({error : "No case is found on the given case-ID"});
+            res.status(404).send({error : "No case were found on the given case-ID"});
     }
-    catch{
+    catch(e){
         console.log("Error occured while getting case details" + e);
         res.send({Success:false})
     }
