@@ -1,4 +1,4 @@
-import { db } from "./database.js";
+import { db } from "./db.js";
 
 export const insertDoctor = async(doctorId,doctorName,workingIn,district,area) => {
     const SQL  = `INSERT INTO doctors

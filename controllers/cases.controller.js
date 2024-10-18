@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { fetchFullCaseDetailsById,fetchCaseDetailsByDoctorId } from "../database-services/GetCases.database.js";
-import { addNewAttacker,addNewVictim,addCase, deleteAttacker, deleteVictim } from "../database-services/AddCases.database.js";
+import { addNewAttacker,addNewVictim,addCase} from "../database-services/AddCases.database.js";
+import { deleteAttacker, deleteVictim,deleteCaseFromDB } from '../database-services/deleteCases.database.js'
 
 //return only the list of attackerId,attacker-species,victim-species,attack date
 export const getAbstractCaseDetails = async(req,res) => {
@@ -57,5 +58,23 @@ export const getFullCaseDetails = async(req,res) => {
     catch(e){
         console.log("Error occured while getting case details" + e);
         res.send({Success:false})
+    }
+}
+
+export const deleteCase = async(req,res) => {
+    const caseId = req.params.caseId;
+    try{
+        const successStatus = await deleteCaseFromDB(caseId)
+        if(successStatus === true)
+            return res.send({Success : true});
+        if(successStatus === false) //is no case exist on the given case ID
+            return res.status(404).send({Success : false,error : "No case found on the given case ID"});
+
+        //Error occured in the database
+        return res.status(500).send({Success:false,error : "Error occured in deleting the case"}) 
+    }
+    catch(e){
+        console.log("Error occured in deleting the case : " + e);
+        return res.status(500).send({Success:false,error : "Error occured in deleting the case"})
     }
 }

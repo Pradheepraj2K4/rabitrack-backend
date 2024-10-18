@@ -1,4 +1,4 @@
-import { db } from "./database.js";
+import { db } from "./db.js";
 
 export const fetchCaseCount = async() => {
     const SQL = `SELECT district,count(case_id)
@@ -14,36 +14,6 @@ export const fetchCaseCount = async() => {
         return false;
     }
 }
-
-// //Not Used
-// export const fetchAllCases = async() => {
-//     const SQL_TO_FETCH_ATTACKERS = `SELECT attacker.* FROM cases
-//     INNER JOIN attackers AS attacker ON attacker.attacker_id = cases.attacker_id`
-    
-//     const SQL_TO_FETCH_VICTIMS = `SELECT victim.* FROM cases
-//     INNER JOIN victims AS victim ON victim.victim_id = cases.victim_id`
-
-//     const SQL_TO_FETCH_CASE_DETAILS = `SELECT case_id,DATE_FORMAT(attack_date,'%d-%m-%Y') AS attack_date,registered_by,district,pincode FROM cases`
-
-//     const SQL_TO_FETCH_DOCTOR_DETAILS = `SELECT doctors.* FROM cases
-//     INNER JOIN doctors ON doctors.doctor_id = cases.doctor_id`
-
-//     // const SQL = `SELECT * FROM cases 
-//     // INNER JOIN attackers ON attackers.attacker_id = cases.attacker_id
-//     // INNER JOIN victims ON victims.victim_id = cases.victim_id`
-
-//     try {
-//         const [attackers] = await db.query(SQL_TO_FETCH_ATTACKERS);
-//         const [victims] = await db.query(SQL_TO_FETCH_VICTIMS);    
-//         const [caseDetails] = await db.query(SQL_TO_FETCH_CASE_DETAILS);    
-//         return [attackers,victims,caseDetails];
-//     } catch (error) {
-//         console.log(error);
-//         return false
-//     }
-   
-// }
-
 
 export const fetchRecentCasesByDistrict = async(district) => {
     const SQL = `SELECT 

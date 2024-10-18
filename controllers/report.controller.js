@@ -10,32 +10,6 @@ export const getCaseCount = async (req,res) => {
     }
 }
 
-//Not used
-// export const getAllCaseDetails = async(req,res) => {
-//     try {
-//         const [attackers,victims,caseDetails] = await fetchAllCases();
-//         let result = []
-//         caseDetails.forEach((ele,index) => {
-//             result = [
-//                 ...result,
-//                 {
-//                     caseId : caseDetails[index].case_id,
-//                     registeredDate : caseDetails[index].date,
-//                     attackDate :  caseDetails[index].attack_date, 
-//                     registered_by :  caseDetails[index].registered_by, 
-//                     district :  caseDetails[index].district, 
-//                     attacker : attackers[index],
-//                     victim : victims[index]
-//                 }
-//             ]
-//         });
-//         res.send(result)
-//     } catch (error) {
-//         console.log(error);
-//         res.send({Succcess : false})
-//     }
-// }
-
 export const getReport = async (req,res) => {
     try {
         const records = await fetchReport(); // returns false in case of error

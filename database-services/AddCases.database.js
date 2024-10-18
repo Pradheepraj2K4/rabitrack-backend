@@ -1,4 +1,4 @@
-import { db } from "./database.js"
+import { db } from "./db.js"
 
 //create a new entry in the  victim table
 export async function addNewVictim(victimId,victim) {
@@ -19,25 +19,6 @@ export async function addNewAttacker(attackerId,attacker) {
         await db.query(SQL,[attackerId,attacker.species,attacker.age,attacker.sex,attacker.breed,attacker.vaccinationStatus,attacker.condition])
     } catch (error) {
         console.log("error inserting attacker details onto attackers table " + error)
-    }
-}
-
-export async function deleteAttacker(attackerId){
-    const SQL = `DELETE FROM attackers
-    WHERE attacker_id = ?`
-    try {
-        await db.query(SQL,[attackerId]);
-    } catch (error) {
-        console.log(error)
-    }
-}
-export async function deleteVictim(victimId){
-    const SQL = `DELETE FROM victims
-    WHERE victim_id = ?`
-    try {
-        await db.query(SQL,[victimId]);
-    } catch (error) {
-        console.log(error)
     }
 }
 

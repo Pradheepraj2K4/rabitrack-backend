@@ -1,4 +1,4 @@
-import { db } from "./database.js"
+import { db } from "./db.js"
 import { getDoctorDetails } from "./doctor.database.js";
 
 export const fetchCaseDetailsByDoctorId = async(doctorId) => {
@@ -74,4 +74,5 @@ export async function getVictimDetails(attackerId) {
         console.log("error retieving attacker info" + error)
     }
 }
+
 
