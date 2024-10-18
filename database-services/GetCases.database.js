@@ -15,7 +15,8 @@ export const fetchCaseDetailsByDoctorId = async(doctorId) => {
     attackers AS attacker ON attacker.attacker_id = cases.attacker_id 
     INNER JOIN 
     victims AS victim ON victim.victim_id = cases.victim_id
-    WHERE registered_by = ?`
+    WHERE cases.registered_by = ?
+    ORDER BY cases.attack_date DESC`
 
     try{
         const [records] = await db.query(SQL,[doctorId]);

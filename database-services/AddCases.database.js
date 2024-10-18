@@ -1,24 +1,24 @@
 import { db } from "./database.js"
 
-//create a new entry in the animals table of type victim
+//create a new entry in the  victim table
 export async function addNewVictim(victimId,victim) {
     const SQL = `INSERT INTO victims 
     VALUES(?,?,?,?,?,?,?,?,?,?);`
     try {
         await db.query(SQL,[victimId,victim.species,victim.age,victim.sex,victim.breed,victim.vaccinationStatus,victim.vaccinationDose,victim.biteSite,victim.woundCategory,victim.firstAidStatus])
     } catch (error) {
-        console.log("error inserting attacker details onto animals table " + error)
+        console.log("error inserting attacker details onto victim table " + error)
     }
 }
 
-//create a new entry in the animals table of type attacker
+//create a new entry in the attackers table
 export async function addNewAttacker(attackerId,attacker) {
     const SQL = `INSERT INTO attackers 
     VALUES(?,?,?,?,?,?,?);`
     try {
         await db.query(SQL,[attackerId,attacker.species,attacker.age,attacker.sex,attacker.breed,attacker.vaccinationStatus,attacker.condition])
     } catch (error) {
-        console.log("error inserting attacker details onto animals table " + error)
+        console.log("error inserting attacker details onto attackers table " + error)
     }
 }
 
@@ -32,7 +32,7 @@ export async function deleteAttacker(attackerId){
     }
 }
 export async function deleteVictim(victimId){
-    const SQL = `DELETE FROM attackers
+    const SQL = `DELETE FROM victims
     WHERE victim_id = ?`
     try {
         await db.query(SQL,[victimId]);
@@ -45,7 +45,6 @@ export async function deleteVictim(victimId){
 export async function addCase(doctorId,attackerId,victimId,pincode,district,attackDate){
     const SQL = `INSERT INTO cases
     VALUES(get_case_id(),DATE_FORMAT(CURDATE(),'%d-%m-%Y'),?,?,?,?,?,?)`
-    console.log(attackDate)
     try {
         await db.query(SQL,[attackDate,doctorId,attackerId,victimId,district,pincode])
         return true
