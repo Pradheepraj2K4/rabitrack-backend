@@ -1,11 +1,11 @@
 import { db } from "./db.js";
 
-export const insertDoctor = async(doctorId,doctorName,workingIn,district,area) => {
+export const insertDoctor = async(doctorId,doctorName,DOB,workingIn,district,area) => {
     const SQL  = `INSERT INTO doctors
-    VALUES(?,?,?,?,?)`
+    VALUES(?,?,?,?,?,?)`
 
     try {
-        await db.query(SQL,[doctorId,doctorName,workingIn,district,area])
+        await db.query(SQL,[doctorId,doctorName,DOB,workingIn,district,area])
         return true;
     } catch (error) {
         console.log(error)
@@ -15,7 +15,7 @@ export const insertDoctor = async(doctorId,doctorName,workingIn,district,area) =
 }
 
 export const getDoctorDetails = async(doctorId) => {
-    const SQL = `SELECT * FROM doctors
+    const SQL = `SELECT doctor_id,doctor_name,working_in,district,area,DATE_FORMAT(DOB,'%Y-%m-%d') as DOB FROM doctors
     WHERE doctor_id = ?`
     try {
         const [[records]] = await db.query(SQL,[doctorId]);

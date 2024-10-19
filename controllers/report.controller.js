@@ -1,9 +1,15 @@
 import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, fetchCaseCount } from "../database-services/report.database.js";
+import { authorize } from '../utils.js';
 
 export const getCaseCount = async (req,res) => {
     try {
-        const records = await fetchCaseCount();
-        return res.send(records)
+        const isAuth = authorize(req.cookies.jwttoken)
+        if(isAuth){
+            const records = await fetchCaseCount();
+            return res.send(records)
+        }
+        else
+            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
     } catch (error) {
         console.log(error);
         return res.status(500).send({Success : false, error : "Unable to fetch case count"})
