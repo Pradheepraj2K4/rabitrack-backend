@@ -3,9 +3,9 @@ import { db } from "./db.js"
 //create a new entry in the  victim table
 export async function addNewVictim(victimId,victim) {
     const SQL = `INSERT INTO victims 
-    VALUES(?,?,?,?,?,?,?,?,?,?);`
+    VALUES(?,?,?,?,?,?,?,?,?,?,?);`
     try {
-        await db.query(SQL,[victimId,victim.species,victim.age,victim.sex,victim.breed,victim.vaccinationStatus,victim.vaccinationDose,victim.biteSite,victim.woundCategory,victim.firstAidStatus])
+        await db.query(SQL,[victimId,victim.species,victim.age,victim.sex,victim.breed,victim.vaccinationStatus,victim.boosterVaccination,victim.vaccinationDose,victim.biteSite,victim.woundCategory,victim.firstAidGiven])
     } catch (error) {
         console.log("error inserting attacker details onto victim table " + error)
     }

@@ -39,8 +39,8 @@ export const fetchRecentCasesByDistrict = async(district) => {
 export const fetchReport = async() => {
     const SQL = `SELECT 
     cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_name,cases.district,cases.pincode,
-    attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,attackers.vaccination_status AS attackers_vaccination_status,
-    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed,site_of_bite,wound_category,victims.vaccination_status as victim_vaccination_status,victims.vaccination_dose,first_aid_status
+    attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,attackers.vaccination_status AS attackers_vaccination_status,,
+    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed,site_of_bite,wound_category,victims.vaccination_status as victim_vaccination_status,booster_vaccination,victims.vaccination_dose,first_aid_given
     FROM cases
     INNER JOIN attackers ON cases.attacker_id = attackers.attacker_id
     INNER JOIN victims ON cases.victim_id = victims.victim_id
@@ -60,7 +60,7 @@ export const fetchCasesByPincode = async(pincode) => {
     const SQL = `SELECT 
     cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_name,cases.district,cases.pincode,
     attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,attackers.vaccination_status AS attackers_vaccination_status,
-    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed,site_of_bite,wound_category,victims.vaccination_status as victim_vaccination_status,victims.vaccination_dose,first_aid_status
+    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed,site_of_bite,wound_category,victims.vaccination_status as victim_vaccination_status,booster_vaccination,victims.vaccination_dose,first_aid_given
     FROM cases
     INNER JOIN attackers ON cases.attacker_id = attackers.attacker_id
     INNER JOIN victims ON cases.victim_id = victims.victim_id

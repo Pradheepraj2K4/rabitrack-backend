@@ -36,6 +36,7 @@ export const login = async(req,res) => {
     } catch (error) {
             console.log(error)
             console.log("error loggin in")
+            
             return res.status(500).send({isAuth : false,Success : false, error : "Error loggin in!"}).end()
     }
 }
