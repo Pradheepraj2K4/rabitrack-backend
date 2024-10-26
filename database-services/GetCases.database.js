@@ -29,7 +29,7 @@ export const fetchCaseDetailsByDoctorId = async(doctorId) => {
 
 export async function fetchFullCaseDetailsById(caseId){
     const SQL = `SELECT 
-    attacker_id,victim_id,registered_by as doctor_id,district,pincode
+    case_id,attacker_id,victim_id,registered_by as doctor_id,district
     from cases
     WHERE cases.case_id = ?`
 
@@ -42,18 +42,21 @@ export async function fetchFullCaseDetailsById(caseId){
         const attackerDetails = await getAttackerDetails(record.attacker_id);
         const victimDetails = await getVictimDetails(record.victim_id);
         const doctorDetails = await getDoctorDetails(record.doctor_id)
+        const ownerDetails = await getVictimOwner(record.victim_id)
+        const doseDetails = await getDoseDetails(caseId)
 
         return {
             attacker : attackerDetails,
             victim : victimDetails,
+            owner : ownerDetails,
             doctor : doctorDetails,
+            doseDetails : doseDetails,
             district : record.district,
-            pincode : record.pincode
         }
     } catch (error) {
-        console.log("error in retrieving full case details : " + error)
+            throw new Error("error in retrieving full case details : " + error.message)
+        }
     }
-}
 
 export async function getAttackerDetails(attackerId) {
     const SQL = `SELECT * FROM attackers as attacker where attacker_id = ?`
@@ -71,7 +74,41 @@ export async function getVictimDetails(attackerId) {
         const [[victim]] = await db.query(SQL,[attackerId])
         return victim
     } catch (error) {
-        console.log("error retieving attacker info" + error)
+        console.log("error retrieving attacker info" + error)
+    }
+}
+
+
+export async function getVictimOwner(victimId) {
+    const SQL = `SELECT name,address,mobile_no as mobile from victim_owners where victim_id = ?`
+    try {
+        const [[owner]] = await db.query(SQL,[victimId])
+        return owner
+    } catch (error) {
+        console.log("error retrieving owner info" + error)
+    }
+}
+
+export async function getDoseDetails(caseId){
+    const SQL = `SELECT dose,DATE_FORMAT(dose_date,'%d-%m-%Y') as dose_date from doses_given
+    WHERE case_id = ?`
+
+    try {
+        const [records] = await db.query(SQL,[caseId])
+        return records
+    } catch (error) {
+        throw new Error("Database query failed in fetching dose details : "+ error.message)
+    }
+}
+
+//returns total no. of rows in the case table
+export async function getLastCaseNumber(){
+    const SQL = `SELECT last_case_number from case_counter`
+    try {
+        const [[{last_case_number}]] = await db.query(SQL)
+        return last_case_number
+    } catch (error) {
+        throw new Error("error retrieving case count" + error.message)
     }
 }
 

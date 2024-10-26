@@ -15,3 +15,22 @@ export function authorize(token){
 
         return isAuth
 }
+
+//returns a character that represents species 
+export function getSpeciesCode(species){
+
+    switch(species.toLowerCase()){
+        case "dog" : 
+                return 'D';
+        case "cat" :
+                return 'C';
+        case "goat" :
+                return 'G';
+        case "sheep" :
+                return 'S';
+        case "cattle " :
+                return 'B';
+        default :
+                return 'O';
+    }
+}
