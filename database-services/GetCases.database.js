@@ -59,7 +59,8 @@ export async function fetchFullCaseDetailsById(caseId){
     }
 
 export async function getAttackerDetails(attackerId) {
-    const SQL = `SELECT * FROM attackers as attacker where attacker_id = ?`
+    const SQL = `SELECT attacker_id,species,age,breed,is_pet,vaccination_status,DATE_FORMAT(last_vaccinated_on,'%d-%m-%y') AS last_vaccinated_on,attacker_status
+    FROM attackers as attacker where attacker_id = ?`
     try {
         const [[attacker]] = await db.query(SQL,[attackerId])
         return attacker
@@ -69,7 +70,8 @@ export async function getAttackerDetails(attackerId) {
 }
 
 export async function getVictimDetails(attackerId) {
-    const SQL = `SELECT * FROM victims as victim where victim_id = ?`
+    const SQL = `SELECT victim_id,species,age,breed,vaccination_status,DATE_FORMAT(last_vaccinated_on,'%d-%m-%y') AS last_vaccinated_on,site_of_bite,wound_category,wound_severity
+    FROM victims as victim where victim_id = ?`
     try {
         const [[victim]] = await db.query(SQL,[attackerId])
         return victim
