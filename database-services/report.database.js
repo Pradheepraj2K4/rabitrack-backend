@@ -10,8 +10,7 @@ export const fetchCaseCount = async() => {
         return records;
     } catch (error) {
         console.log(error)
-        console.log("error fetching case count")
-        return false;
+        throw new Error("DB query failed in fetching case count " + error.message)
     }
 }
 
@@ -31,7 +30,7 @@ export const fetchRecentCasesByDistrict = async(district) => {
         const [records] = await db.query(SQL,[district]);
         return records;
     } catch (error) {
-        console.log("error fetching cases by district from DB : " + error);
+        throw new Error("DB query failed in fetching recent cases" + error.message)
     }
 }
 
@@ -51,8 +50,7 @@ export const fetchReport = async() => {
         const [records] = await db.query(SQL);
         return records
     } catch (error) {
-        console.log(error)
-        return false
+        throw new Error("DB query failed in fetching report " + error.message)
     }
 }
 
@@ -70,7 +68,6 @@ export const fetchCasesByPincode = async(pincode) => {
         const [records] = await db.query(SQL,[pincode]);
         return records
     } catch (error) {
-        console.log(error)
-        return false
+        throw new Error("DB query failed in fetching cases " + error.message)
     }
 }

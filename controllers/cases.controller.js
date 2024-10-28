@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { fetchFullCaseDetailsById, fetchCaseDetailsByDoctorId, getLastCaseNumber} from "../database-services/GetCases.database.js";
 import { addNewAttacker, addNewVictim, addCase, addNewVictimOwner, addDosesGiven } from "../database-services/AddCases.database.js";
-import { deleteAttacker, deleteVictim, deleteCaseFromDB } from '../database-services/deleteCases.database.js'
+import { deleteCaseFromDB } from '../database-services/deleteCases.database.js'
 import { authorize,getSpeciesCode } from '../utils.js';
 
 //return only the list of attackerId,attacker-species,victim-species,attack date
@@ -11,11 +11,7 @@ export const getAbstractCaseDetails = async (req, res) => {
         const isAuth = authorize(req.cookies.jwttoken)
         if (isAuth) {
             const cases = await fetchCaseDetailsByDoctorId(doctorId); //returns false if error fetching from DB
-            if (cases === false) {
-                console.error("Error connecting DB - fetchCaseDetailsByDoctorId")
-                return res.send({ Success: false, error: "Error occured, Please try again!" })
-            }
-            else if (cases.length > 0)
+            if (cases.length > 0)
                 res.send(cases);
             else
                 res.status(404).send({ error: "No cases were found" });
@@ -45,23 +41,16 @@ export const registerNewCase = async (req, res) => {
             let caseId = getSpeciesCode(req.body.victim.species) + currentYear + lastCaseNumber.toString().padStart(5,'0');
 
             //reqister a new case with the generated attackerId and victimId
-            if (await addCase(caseId,req.body.doctorId, attackerId, victimId, req.body.district,req.body.area,req.body.attackDate)){ //returns false if any error occurs at DB
-                await addDosesGiven(caseId,req.body.dose,req.body.doseDate)
-                return res.send({ Success: true });
-            }
-            else {
-                //delete the attacker and victim if it is already inserted and the issue is only with the case table
-                await deleteAttacker(attackerId);
-                await deleteVictim(victimId);
-                return res.status(400).send({ Success: false, error: "Failed to add cases" });
-            }
+            await addCase(caseId,req.body.doctorId, attackerId, victimId, req.body.district,req.body.area,req.body.attackDate) //returns false if any error occurs at DB
+            await addDosesGiven(caseId,req.body.dose,req.body.doseDate)
+            return res.send({ Success: true });
         }
         else
             return res.status(401).send({ Success: false, error: "User doesn't have the permission" })
 
     } catch (error) {
         console.log(error)
-        res.status(500).send({ Success: false, error: "unexpected error occured!" });
+        res.status(500).send({ Success: false, error: "Failed to add cases!" });
     }
 }
 
@@ -81,7 +70,7 @@ export const getFullCaseDetails = async (req, res) => {
     }
     catch (err) {
         console.log("Error occured while getting case details" + err);
-        res.status(400).send({ Success: false,error: "Error occured while getting case details" })
+        res.status(400).send({ Success: false,error: "Error occured while getting case details!" })
     }
 }
 
@@ -93,11 +82,8 @@ export const deleteCase = async (req, res) => {
             const successStatus = await deleteCaseFromDB(caseId)
             if (successStatus === true)
                 return res.send({ Success: true });
-            if (successStatus === false) //is no case exist on the given case ID
-                return res.status(404).send({ Success: false, error: "No case found on the given case ID" });
-
-            //Error occured in the database
-            return res.status(500).send({ Success: false, error: "Error occured in deleting the case" })
+            else //is no case exist on the given case ID
+                return res.status(404).send({ Success: false, error: "No cases were found on the given case ID" });
         }
         else
             return res.status(401).send({ Success: false, error: "User doesn't have the permission" })

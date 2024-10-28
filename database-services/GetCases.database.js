@@ -22,8 +22,7 @@ export const fetchCaseDetailsByDoctorId = async(doctorId) => {
         const [records] = await db.query(SQL,[doctorId]);
         return records
     }catch(e){
-        console.log("Error in fetching caseDetails by doctorId " + e);
-        return false
+        throw new Error("DB query failed in fetching caseDetails by doctorId " + e);
     }
 }
 
@@ -65,7 +64,7 @@ export async function getAttackerDetails(attackerId) {
         const [[attacker]] = await db.query(SQL,[attackerId])
         return attacker
     } catch (error) {
-        console.log("error retieving victim info" + error)
+        throw new Error("DB query failed in retieving victim info" + error.message)
     }
 }
 
@@ -76,7 +75,7 @@ export async function getVictimDetails(attackerId) {
         const [[victim]] = await db.query(SQL,[attackerId])
         return victim
     } catch (error) {
-        console.log("error retrieving attacker info" + error)
+        throw new Error("DB query failed in retrieving attacker info" + error.message)
     }
 }
 
@@ -87,7 +86,7 @@ export async function getVictimOwner(victimId) {
         const [[owner]] = await db.query(SQL,[victimId])
         return owner
     } catch (error) {
-        console.log("error retrieving owner info" + error)
+        throw new Error("DB query failed in retrieving owner info" + error.message)
     }
 }
 

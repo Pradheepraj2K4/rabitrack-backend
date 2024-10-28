@@ -7,16 +7,19 @@ export async function deleteCaseFromDB(caseId) {
     try {
         const [records] = await db.query(SQL_VERIFY,[caseId]) //check whether a case exist with the given case ID
         if(records.length > 0){ //if exists then delete
-            await db.query(SQL_DELETE,[caseId])
+            await db.query(SQL_DELETE,[caseId])//delete entry from case table
+            await deleteAttacker(records[0].attacker_id)//delete from attacker table
+            await deleteAttacker(records[0].victim_id)//delete from victim table
+            await deleteVictimOwner(records[0].victim_id)
+            await deleteDosesGiven(caseId);
             return true         
         }
         else
             return false // return false if a case doesn't exist on the given case ID
     } catch (error) {
-        console.log("error deleting case from DB" + error)
+        throw new Error("DB query failed in deleting case" + error.message)
     }
 }
-
 
 //Used only if there is error in inserting into case table but attacker/victims details are successfully inserted
 export async function deleteAttacker(attackerId){
@@ -25,7 +28,7 @@ export async function deleteAttacker(attackerId){
     try {
         await db.query(SQL,[attackerId]);
     } catch (error) {
-        console.log(error)
+        throw new Error("DB query failed in deleting attacker" + error.message)
     }
 }
 export async function deleteVictim(victimId){
@@ -34,6 +37,26 @@ export async function deleteVictim(victimId){
     try {
         await db.query(SQL,[victimId]);
     } catch (error) {
-        console.log(error)
+        throw new Error("DB query failed in deleting victim" + error.message)
+    }
+}
+
+export async function deleteVictimOwner(victimId){
+    const SQL = `DELETE FROM victim_owners
+    WHERE victim_id = ?`
+    try {
+        await db.query(SQL,[victimId]);
+    } catch (error) {
+        throw new Error("DB query failed in deleting victim owner" + error.message)
+    }
+}
+
+export async function deleteDosesGiven(caseId){
+    const SQL = `DELETE FROM doses_given
+    WHERE case_id = ?`
+    try {
+        await db.query(SQL,[caseId]);
+    } catch (error) {
+        throw new Error("DB query failed in deleting doseDetails" + error.message)
     }
 }

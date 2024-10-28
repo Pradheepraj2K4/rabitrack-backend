@@ -8,7 +8,7 @@ export async function addNewVictim(victimId,victim) {
     try {
         await db.query(SQL,[victimId,victim.species,victim.age,victim.sex,victim.breed,victim.vaccinationStatus,victim.lastVaccinatedOn,victim.biteSite,victim.woundCategory,victim.woundSeverity])
     } catch (error) {
-        console.log("error inserting attacker details onto victim table " + error)
+        throw new Error("DB query failed in inserting into victim table " + error.message)
     }
 }
 
@@ -30,7 +30,7 @@ export async function addNewVictimOwner(victimId,owner) {
     try {
         await db.query(SQL,[victimId,owner.name,owner.address,owner.mobile])
     } catch (error) {
-        console.log("error inserting victim owner details onto attackers table " + error)
+        throw new Error("DB query failed in inserting victim owner details" + error.message)
     }
 }
 
@@ -54,9 +54,7 @@ export async function addCase(caseId,doctorId,attackerId,victimId,district,area,
     try {
         await db.query(SQL,[caseId,attackDate,doctorId,attackerId,victimId,district,area])
         await db.query(SQL_INC_COUNTER)
-        return true
     } catch (error) {
-        console.log("error inserting caseDetails onto case table " + error)
-        return false
+        throw new Error("DB query failed in inserting caseDetails onto case table " + error.message)
     }
 }

@@ -6,11 +6,8 @@ export const insertDoctor = async(doctorId,doctorName,DOB,workingIn,district,are
 
     try {
         await db.query(SQL,[doctorId,doctorName,DOB,workingIn,district,area])
-        return true;
     } catch (error) {
-        console.log(error)
-        console.log("Error in inserting doctor into DB");
-        return false;
+        throw new Error("DB query failed in inserting doctor into DB " + error.message);
     }
 }
 
@@ -21,8 +18,6 @@ export const getDoctorDetails = async(doctorId) => {
         const [[records]] = await db.query(SQL,[doctorId]);
         return records;
     } catch (error) {
-        console.log("Error in fetching doctor details - db")
-        console.log(error)
-        return false
+        throw new Error("DB query failed in fetching doctor details " + error.message)
     }
 }
