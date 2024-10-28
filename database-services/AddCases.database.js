@@ -15,9 +15,9 @@ export async function addNewVictim(victimId,victim) {
 //create a new entry in the attackers table
 export async function addNewAttacker(attackerId,attacker) {
     const SQL = `INSERT INTO attackers 
-    VALUES(?,?,?,?,?,?,?,?);`
+    VALUES(?,?,?,?,?,?,?,?,?);`
     try {
-        await db.query(SQL,[attackerId,attacker.species,attacker.age,attacker.sex,attacker.breed,attacker.vaccinationStatus,attacker.lastVaccinatedOn,attacker.status])
+        await db.query(SQL,[attackerId,attacker.species,attacker.age,attacker.sex,attacker.breed,attacker.isPet,attacker.vaccinationStatus,attacker.lastVaccinatedOn,attacker.status])
     } catch (error) {
         throw new Error("error inserting attacker details onto attackers table : " + error.message)
     }
