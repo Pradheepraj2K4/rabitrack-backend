@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken";
 import { getDoctorDetails, insertDoctor } from "../database-services/doctor.database.js";
 
 export const registerDoctor = async(req,res) => {
-    const {doctorId,doctorName,workingIn,district,area,DOB} = req.body;
+    const {doctorId,doctorName,workingIn,district,area,DOB,mobile} = req.body;
 
     //returns if any of the input fields are undefined
-    if(!(doctorId && doctorName && workingIn && district && area && DOB))
+    if(!(doctorId && doctorName && workingIn && district && area && DOB && mobile))
         return res.status(400).send({Success : false, error : "Missing fields - invalid data"})
 
     try {
@@ -14,7 +14,7 @@ export const registerDoctor = async(req,res) => {
         if(doctorDetails) //doctor already registed
             return res.status(409).send({Success : false, error : "doctor with the given ID is already registered"})
 
-        await insertDoctor(doctorId,doctorName,DOB,workingIn,district,area)
+        await insertDoctor(doctorId,doctorName,DOB,workingIn,district,area,mobile)
         return res.send({Success : true})
     } catch (error) {
         console.log("Error in registering doctor " + error);

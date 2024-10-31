@@ -1,11 +1,11 @@
 import { db } from "./db.js";
 
-export const insertDoctor = async(doctorId,doctorName,DOB,workingIn,district,area) => {
+export const insertDoctor = async(doctorId,doctorName,DOB,workingIn,district,area,mobile) => {
     const SQL  = `INSERT INTO doctors
-    VALUES(?,?,?,?,?,?)`
+    VALUES(?,?,?,?,?,?,?)`
 
     try {
-        await db.query(SQL,[doctorId,doctorName,DOB,workingIn,district,area])
+        await db.query(SQL,[doctorId,doctorName,DOB,workingIn,district,area,mobile])
     } catch (error) {
         throw new Error("DB query failed in inserting doctor into DB " + error.message);
     }
