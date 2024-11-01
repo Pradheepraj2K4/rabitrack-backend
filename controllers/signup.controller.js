@@ -38,3 +38,14 @@ export const login = async(req,res) => {
             return res.status(500).send({isAuth : false,Success : false, error : "Error logging in!"})
     }
 }
+
+
+export const adminLogin = async (req,res) => {
+    try {
+        const token = jwt.sign("admin",process.env.ACCESS_TOKEN_KEY);
+        return res.cookie("jwttoken ", token).send({isAuth : true});
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({Success : false})
+    }
+}

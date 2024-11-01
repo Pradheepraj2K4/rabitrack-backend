@@ -14,6 +14,26 @@ export const fetchCaseCount = async() => {
     }
 }
 
+export const fetchCases = async(offset,limit) => {
+    const SQL = `SELECT cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,cases.district,
+    attackers.species AS attacker_species,
+    victims.species AS victim_species,
+    doctors.doctor_name
+    FROM cases
+    INNER JOIN attackers ON cases.attacker_id = attackers.attacker_id
+    INNER JOIN victims ON cases.victim_id = victims.victim_id
+    INNER JOIN doctors ON cases.registered_by = doctors.doctor_id
+    ORDER BY cases.attack_date DESC
+    LIMIT ? OFFSET ?`
+    try {
+        const [records] = await db.query(SQL,[limit,offset]);
+        return records;
+    } catch (error) {
+        console.log(error)
+        throw new Error("DB query failed in fetching cases " + error)
+    }
+}
+
 export const fetchRecentCasesByDistrict = async(district) => {
     const SQL = `SELECT 
     cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_name,
