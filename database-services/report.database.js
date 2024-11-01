@@ -48,7 +48,7 @@ export const fetchCases = async(offset,limit) => {
     }
 }
 
-export const fetchRecentCasesByDistrict = async(district) => {
+export const fetchCasesByDistrict = async(district,limit,offset) => {
     const SQL = `SELECT 
     cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_name,
     attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,
@@ -59,12 +59,12 @@ export const fetchRecentCasesByDistrict = async(district) => {
     INNER JOIN doctors ON cases.registered_by = doctors.doctor_id
     WHERE cases.district = ?
     ORDER BY cases.attack_date DESC
-    LIMIT 10`
+    LIMIT ? offset ?`
     try {
-        const [records] = await db.query(SQL,[district]);
+        const [records] = await db.query(SQL,[district,limit,offset]);
         return records;
     } catch (error) {
-        throw new Error("DB query failed in fetching recent cases" + error.message)
+        throw new Error("DB query failed in fetching recent cases " + error.message)
     }
 }
 

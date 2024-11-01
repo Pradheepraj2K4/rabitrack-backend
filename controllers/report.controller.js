@@ -1,4 +1,4 @@
-import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, fetchTotalCaseCount, fetchCases, fetchCaseCountByMonth } from "../database-services/report.database.js";
+import {fetchCasesByPincode, fetchCasesByDistrict, fetchReport, fetchTotalCaseCount, fetchCases, fetchCaseCountByMonth } from "../database-services/report.database.js";
 import { authorize } from '../utils.js';
 
 
@@ -49,6 +49,27 @@ export const getAllCases = async (req,res) => {
     }
 }
 
+export const getCasesByDistrict = async(req,res) => {
+    const district = req.params.district
+    try {
+        const isAuth = authorize(req.cookies.jwttoken)
+        const LIMIT = req.query.limit
+        const pageNo = req.query.page
+        if(isAuth){
+            const records = await fetchCasesByDistrict(district,Number(LIMIT),Number((pageNo-1)*LIMIT));
+            if(records.length > 0)
+                res.send(records)
+            else
+                res.status(404).send({Success : false, error : "No cases were found with the district : " + district});
+        }
+        else
+            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
+    } catch (error) {
+        console.log("error in fetching cases by district : " + error);
+        res.status(500).send({Success : false,error : "Unexpected error occured during fetching the cases"});
+    }
+}
+
 export const getReport = async (req,res) => {
     try {
         const isAuth = authorize(req.cookies.jwttoken)
@@ -67,24 +88,6 @@ export const getReport = async (req,res) => {
     }
 }
 
-export const getRecentCasesByDistrict = async(req,res) => {
-    const district = req.params.district
-    try {
-        const isAuth = authorize(req.cookies.jwttoken)
-        if(isAuth){
-            const records = await fetchRecentCasesByDistrict(district);
-            if(records.length > 0)
-                res.send(records)
-            else
-                res.status(404).send({Success : false, error : "No cases were found with the district : " + district});
-        }
-        else
-            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
-    } catch (error) {
-        console.log("error in fetching cases by district : " + error);
-        res.send({Success : false,error : "Unexpected error occured during fetching the data"});
-    }
-}
 
 export const getCasesByPincode = async(req,res) => {
     const pincode = req.params.pincode;
