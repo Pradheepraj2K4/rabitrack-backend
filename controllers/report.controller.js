@@ -1,12 +1,27 @@
-import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, fetchCaseCount, fetchCases } from "../database-services/report.database.js";
+import {fetchCasesByPincode, fetchRecentCasesByDistrict, fetchReport, fetchTotalCaseCount, fetchCases, fetchCaseCountByMonth } from "../database-services/report.database.js";
 import { authorize } from '../utils.js';
 
 
-export const getCaseCount = async (req,res) => {
+export const getTotalCaseCount = async (req,res) => {
     try {
         const isAuth = authorize(req.cookies.jwttoken)
         if(isAuth){
-            const records = await fetchCaseCount();
+            const records = await fetchTotalCaseCount();
+            return res.send(records)
+        }
+        else
+            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({Success : false, error : "Unable to fetch case count"})
+    }
+}
+
+export const getCaseCountbyMonth = async (req,res) => {
+    try {
+        const isAuth = authorize(req.cookies.jwttoken)
+        if(isAuth){
+            const records = await fetchCaseCountByMonth(2024);
             return res.send(records)
         }
         else
@@ -22,7 +37,6 @@ export const getAllCases = async (req,res) => {
         const isAuth = authorize(req.cookies.jwttoken)
         const LIMIT = 15;
         const pageNo = req.query.page;
-        console.log(pageNo)
         if(isAuth){
             const records = await fetchCases((pageNo-1)*LIMIT,LIMIT);
             return res.send(records)

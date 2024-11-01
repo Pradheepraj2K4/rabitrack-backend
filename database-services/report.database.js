@@ -1,10 +1,24 @@
 import { db } from "./db.js";
 
-export const fetchCaseCount = async() => {
+export const fetchTotalCaseCount = async() => {
     const SQL = `SELECT district,count(case_id)
      as count 
      FROM cases 
      GROUP BY district`
+    try {
+        const [records] = await db.query(SQL);
+        return records;
+    } catch (error) {
+        console.log(error)
+        throw new Error("DB query failed in fetching case count " + error.message)
+    }
+}
+
+export const fetchCaseCountByMonth = async() => {
+    const SQL = `SELECT count(case_id) AS count,MONTH(attack_date) AS month
+     FROM cases
+     WHERE YEAR(attack_date) = YEAR(CURDATE()) 
+     GROUP BY MONTH(attack_date)`
     try {
         const [records] = await db.query(SQL);
         return records;

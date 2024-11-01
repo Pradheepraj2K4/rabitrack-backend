@@ -3,7 +3,7 @@ import { configDotenv } from 'dotenv';
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {deleteCase, getAbstractCaseDetails, getFullCaseDetails, registerNewCase, updateDoseDetails} from './controllers/cases.controller.js';
-import {getAllCases, getCaseCount, getCasesByPincode, getRecentCasesByDistrict, getReport } from './controllers/report.controller.js';
+import {getAllCases, getTotalCaseCount, getCasesByPincode, getRecentCasesByDistrict, getReport, getCaseCountbyMonth } from './controllers/report.controller.js';
 import { adminLogin, login, registerDoctor } from './controllers/signup.controller.js';
 configDotenv();
 const app = express();
@@ -26,7 +26,8 @@ app.delete('/deleteCase/:caseId',deleteCase)
 app.put('/updateDoses/:caseId',updateDoseDetails)
 
 //REPORTS
-app.get('/getCaseCount',getCaseCount);
+app.get('/getCaseCount',getTotalCaseCount);
+app.get('/getCaseCountByMonth',getCaseCountbyMonth);
 app.get('/getCases',getAllCases);
 app.get('/getAllCaseReport',getReport);
 app.get('/getCasesByDistrict/:district',getRecentCasesByDistrict);
