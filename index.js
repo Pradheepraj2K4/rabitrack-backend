@@ -10,6 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
+    origin: 'https://rabitrack-backend-production.up.railway.app',
     credentials: true
 }));
 
