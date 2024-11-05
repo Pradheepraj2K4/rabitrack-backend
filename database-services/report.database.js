@@ -15,10 +15,10 @@ export const fetchTotalCaseCount = async() => {
 }
 
 export const fetchCaseCountByMonth = async() => {
-    const SQL = `SELECT count(case_id) AS count,MONTH(attack_date) AS month
+    const SQL = `SELECT count(case_id) AS count,DATE_FORMAT(attack_date ,'%b') AS month
      FROM cases
      WHERE YEAR(attack_date) = YEAR(CURDATE()) 
-     GROUP BY MONTH(attack_date)`
+     GROUP BY DATE_FORMAT(attack_date ,'%b')`
     try {
         const [records] = await db.query(SQL);
         return records;

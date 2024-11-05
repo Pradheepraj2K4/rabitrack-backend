@@ -28,7 +28,7 @@ export const fetchCaseDetailsByDoctorId = async(doctorId) => {
 
 export async function fetchFullCaseDetailsById(caseId){
     const SQL = `SELECT 
-    case_id,attacker_id,victim_id,registered_by as doctor_id,district
+    case_id,attacker_id,victim_id,registered_by as doctor_id,district,area
     from cases
     WHERE cases.case_id = ?`
 
@@ -51,6 +51,7 @@ export async function fetchFullCaseDetailsById(caseId){
             doctor : doctorDetails,
             doseDetails : doseDetails,
             district : record.district,
+            area : record.area
         }
     } catch (error) {
             throw new Error("error in retrieving full case details : " + error.message)
