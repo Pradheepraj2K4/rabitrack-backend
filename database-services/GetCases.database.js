@@ -8,13 +8,16 @@ export const fetchCaseDetailsByDoctorId = async(doctorId) => {
     DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,
     cases.case_id,
     attacker.species AS attacker_species,
-    victim.species AS victim_species
+    victim.species AS victim_species,
+    owner.name as victim_owner
     FROM 
     cases 
     INNER JOIN 
     attackers AS attacker ON attacker.attacker_id = cases.attacker_id 
     INNER JOIN 
     victims AS victim ON victim.victim_id = cases.victim_id
+    INNER JOIN
+    victim_owners As owner ON owner.victim_id = cases.victim_id
     WHERE cases.registered_by = ?
     ORDER BY cases.attack_date DESC`
 
