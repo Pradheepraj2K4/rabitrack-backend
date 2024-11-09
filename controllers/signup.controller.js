@@ -43,7 +43,11 @@ export const login = async(req,res) => {
 export const adminLogin = async (req,res) => {
     try {
         const token = jwt.sign("admin",process.env.ACCESS_TOKEN_KEY);
-        return res.cookie("jwttoken ", token).send({isAuth : true});
+        return res.cookie(res.cookie('jwttoken', token, {
+            httpOnly: true,          // Set to false if you need client-side access
+            secure: process.env.NODE_ENV === 'production', // Set true for HTTPS
+            sameSite: 'None',         // Required for cross-origin
+        })).send({isAuth : true});
     } catch (error) {
         console.log(error)
         res.status(500).send({Success : false})
