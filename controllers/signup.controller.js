@@ -46,9 +46,9 @@ export const adminLogin = async (req,res) => {
         const {username , password} = req.body;
         if(username === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD){
             return res.cookie('jwttoken', token, {
-                httpOnly: false,          // Set to false if you need client-side access
-                secure: process.env.NODE_ENV === 'production', // Set true for HTTPS
-                sameSite: 'None',         // Required for cross-origin
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production' && req.hostname !== 'localhost', // Allow cookies for HTTP on localhost
+                sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Use 'Lax' for local development to avoid cross-origin issues
             }).send({isAuth : true});
         }
         else
@@ -61,5 +61,9 @@ export const adminLogin = async (req,res) => {
 }
 
 export const logout = async(req,res) => {
-    return res.clearCookie('jwttoken').send({success : true})
+    return res.clearCookie('jwttoken', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production' && req.hostname !== 'localhost',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    }).send({success : true})
 }

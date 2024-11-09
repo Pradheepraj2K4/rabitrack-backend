@@ -4,7 +4,6 @@ import { authorize } from '../utils.js';
 
 export const getTotalCaseCount = async (req,res) => {
     try {
-        console.log("token :" + req.cookies.jwttoken)
         const isAuth = authorize(req.cookies.jwttoken)
         if(!isAuth)
             return res.status(401).send({Success : false, error : "User doesn't have the permission"})
