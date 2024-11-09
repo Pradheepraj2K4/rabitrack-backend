@@ -4,12 +4,13 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import {deleteCase, getAbstractCaseDetails, getFullCaseDetails, registerNewCase, updateDoseDetails} from './controllers/cases.controller.js';
 import {getAllCases, getTotalCaseCount, getCasesByPincode, getCasesByDistrict, getReport, getCaseCountbyMonth } from './controllers/report.controller.js';
-import { adminLogin, login, registerDoctor } from './controllers/signup.controller.js';
+import { adminLogin, login, logout, registerDoctor } from './controllers/signup.controller.js';
 configDotenv();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
+    //setting origin dynamically (by not using '*')
   origin: (origin, callback) => {
     // Reflect the request origin to allow requests from any origin
     callback(null, origin); 
@@ -21,6 +22,7 @@ app.use(cors({
 app.post('/signup',registerDoctor)
 app.post('/login',login)
 app.post('/admin-login',adminLogin)
+app.post('/logout',logout)
 
 //CASES
 app.post('/addNewCase',registerNewCase);
