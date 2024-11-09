@@ -45,11 +45,11 @@ export const adminLogin = async (req,res) => {
         const token = jwt.sign("admin",process.env.ACCESS_TOKEN_KEY);
         const {username , password} = req.body;
         if(username === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD){
-            return res.cookie(res.cookie('jwttoken', token, {
+            return res.cookie('jwttoken', token, {
                 httpOnly: false,          // Set to false if you need client-side access
                 secure: process.env.NODE_ENV === 'production', // Set true for HTTPS
                 sameSite: 'None',         // Required for cross-origin
-            })).send({isAuth : true});
+            }).send({isAuth : true});
         }
         else
             return res.send({isAuth : false})
@@ -61,5 +61,5 @@ export const adminLogin = async (req,res) => {
 }
 
 export const logout = async(req,res) => {
-    return res.clearCookie('jwttoken')
+    return res.clearCookie('jwttoken').send({success : true})
 }
