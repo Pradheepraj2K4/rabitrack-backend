@@ -68,6 +68,18 @@ export const fetchCasesByDistrict = async(district,limit,offset) => {
     }
 }
 
+export const fetchCaseCountWithLocation = async() => {
+    const SQL = `SELECT location.area,location.district,location.latitude,location.longitude 
+    FROM location 
+    INNER JOIN cases ON location.area = cases.area
+    GROUP BY location.area;`
+    try {
+        const [records] = await db.query(SQL);
+        return records;
+    } catch (error) {
+        throw new Error("DB query failed in fetching location details " + error.message)
+    }
+}
 
 export const fetchReport = async() => {
     const SQL = `SELECT 
