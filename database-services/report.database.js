@@ -69,7 +69,7 @@ export const fetchCasesByDistrict = async(district,limit,offset) => {
 }
 
 export const fetchCaseCountWithLocation = async() => {
-    const SQL = `SELECT location.area,location.district,location.latitude,location.longitude 
+    const SQL = `SELECT location.area,location.district,COUNT(cases.case_id) as count,location.latitude,location.longitude 
     FROM location 
     INNER JOIN cases ON location.area = cases.area
     GROUP BY location.area;`
