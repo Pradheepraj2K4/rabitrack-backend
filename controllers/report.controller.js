@@ -52,7 +52,7 @@ export const getCasesByDistrict = async(req,res) => {
     const district = req.params.district
     try {
         const isAuth = authorize(req.cookies.jwttoken)
-        const LIMIT = req.query.limit
+        const LIMIT = 15
         const pageNo = req.query.page
 
         if(!isAuth)

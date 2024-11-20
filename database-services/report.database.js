@@ -50,9 +50,9 @@ export const fetchCases = async(offset,limit) => {
 
 export const fetchCasesByDistrict = async(district,limit,offset) => {
     const SQL = `SELECT 
-    cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_name,
+    cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,cases.district,doctors.doctor_name,
     attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,
-    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed
+    victims.species AS victim_species, victims.age AS victims_age,victims.breed AS victims_breed
     FROM cases
     INNER JOIN attackers ON cases.attacker_id = attackers.attacker_id
     INNER JOIN victims ON cases.victim_id = victims.victim_id
