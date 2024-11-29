@@ -83,13 +83,15 @@ export const fetchCaseCountWithLocation = async() => {
 
 export const fetchReport = async() => {
     const SQL = `SELECT 
-    cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_name,cases.district,
+    cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_id,doctors.doctor_name,cases.district,
     attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,attackers.is_pet,attackers.vaccination_status AS attackers_vaccination_status,attackers.last_vaccinated_on,attackers.attacker_status,
-    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed,site_of_bite,wound_category,victims.vaccination_status as victim_vaccination_status,victims.vaccination_dose,first_aid_given
+    victims.species AS victims_species, victims.age AS victims_age,victims.breed AS victims_breed,site_of_bite,wound_category,victims.vaccination_status as victim_vaccination_status,victims.wound_category,wound_severity,
+    victim_owners.name as owner_name,victim_owners.address as owner_address,victim_owners.mobile_no as owner_mobile
     FROM cases
     INNER JOIN attackers ON cases.attacker_id = attackers.attacker_id
     INNER JOIN victims ON cases.victim_id = victims.victim_id
     INNER JOIN doctors ON cases.registered_by = doctors.doctor_id
+    INNER JOIN victim_owners ON victims.victim_id = victim_owners.victim_id 
     ORDER BY cases.attack_date DESC`
 
     try {
