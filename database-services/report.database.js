@@ -81,7 +81,7 @@ export const fetchCaseCountWithLocation = async() => {
     }
 }
 
-export const fetchReport = async() => {
+export const fetchReport = async(district) => {
     const SQL = `SELECT 
     cases.case_id,DATE_FORMAT(cases.attack_date,'%d-%m-%Y') as attack_date,doctors.doctor_id,doctors.doctor_name,cases.district,
     attackers.species AS attacker_species, attackers.age as attacker_age, attackers.breed AS attacker_breed,attackers.is_pet,attackers.vaccination_status AS attackers_vaccination_status,attackers.last_vaccinated_on,attackers.attacker_status,
@@ -92,6 +92,7 @@ export const fetchReport = async() => {
     INNER JOIN victims ON cases.victim_id = victims.victim_id
     INNER JOIN doctors ON cases.registered_by = doctors.doctor_id
     INNER JOIN victim_owners ON victims.victim_id = victim_owners.victim_id 
+    ${district ? ("WHERE cases.district = '"+ district+"'") : ' '}
     ORDER BY cases.attack_date DESC`
 
     try {

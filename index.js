@@ -37,6 +37,7 @@ app.get('/getCaseCount',getTotalCaseCount);
 app.get('/getCaseCountByMonth',getCaseCountbyMonth);
 app.get('/getCases',getAllCases);
 app.get('/getAllCaseReport',getReport);
+app.get('/getAllCaseReport/:district',getReport);
 app.get('/getCases/:district',getCasesByDistrict);
 app.get('/getCasesByPincode/:pincode',getCasesByPincode)//
 app.get('/getCaseCountByAreas',getLocation)//

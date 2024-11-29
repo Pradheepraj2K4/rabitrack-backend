@@ -71,12 +71,13 @@ export const getCasesByDistrict = async(req,res) => {
 }
 
 export const getReport = async (req,res) => {
+    const district = req.params?.district
     try {
         const isAuth = authorize(req.cookies.jwttoken)
         if(!isAuth)
             return res.status(401).send({Success : false, error : "User doesn't have the permission"})
         
-        const records = await fetchReport(); // returns false in case of error
+        const records = await fetchReport(district); // returns false in case of error
         if(records)
             res.send(records)
         else
