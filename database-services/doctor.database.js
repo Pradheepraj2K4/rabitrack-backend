@@ -12,7 +12,7 @@ export const insertDoctor = async(doctorId,doctorName,DOB,workingIn,district,are
 }
 
 export const getDoctorDetails = async(doctorId) => {
-    const SQL = `SELECT doctor_id,doctor_name,working_in,district,area,DATE_FORMAT(DOB,'%Y-%m-%d') as DOB FROM doctors
+    const SQL = `SELECT doctor_id,doctor_name,working_in,district,area,mobile_no,DATE_FORMAT(DOB,'%Y-%m-%d') as DOB FROM doctors
     WHERE doctor_id = ?`
     try {
         const [[records]] = await db.query(SQL,[doctorId]);
