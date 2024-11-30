@@ -15,10 +15,18 @@ export const fetchTotalCaseCount = async() => {
 }
 
 export const fetchCaseCountByMonth = async() => {
-    const SQL = `SELECT count(case_id) AS count,DATE_FORMAT(attack_date ,'%b') AS month
-     FROM cases
-     WHERE YEAR(attack_date) = YEAR(CURDATE()) 
-     GROUP BY DATE_FORMAT(attack_date ,'%b')`
+    const SQL = `SELECT 
+    COUNT(case_id) AS count,
+    DATE_FORMAT(attack_date, '%b') AS month
+FROM 
+    cases
+WHERE 
+    YEAR(attack_date) = YEAR(CURDATE())
+GROUP BY 
+    DATE_FORMAT(attack_date, '%b'), MONTH(attack_date)
+ORDER BY 
+    MONTH(attack_date);
+     `
     try {
         const [records] = await db.query(SQL);
         return records;
@@ -92,7 +100,7 @@ export const fetchReport = async(district) => {
     INNER JOIN victims ON cases.victim_id = victims.victim_id
     INNER JOIN doctors ON cases.registered_by = doctors.doctor_id
     INNER JOIN victim_owners ON victims.victim_id = victim_owners.victim_id 
-    ${district ? ("WHERE cases.district = '"+ district+"'") : ' '}
+    ${district ? ("WHERE cases.district = '"+ district+"'") : ' '} 
     ORDER BY cases.attack_date DESC`
 
     try {
