@@ -34,3 +34,20 @@ export function getSpeciesCode(species){
                 return 'O';
     }
 }
+
+export function generateFilterQuery(district,year,month){
+    let conditions = [];
+
+    if (district) {
+        conditions.push(`cases.district = '${district}'`);
+    }
+    if (year) {
+        conditions.push(`YEAR(attack_date) = '${year}'`);
+    }
+    if (month) {
+        conditions.push(`MONTH(attack_date) = '${month}'`);
+    }
+
+    let filterQuery = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    return filterQuery;
+}

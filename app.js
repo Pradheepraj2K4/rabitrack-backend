@@ -3,7 +3,7 @@ import { configDotenv } from 'dotenv';
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {deleteCase, getAbstractCaseDetails, getFullCaseDetails, registerNewCase, updateDoseDetails} from './controllers/cases.controller.js';
-import {getAllCases, getTotalCaseCount, getCasesByPincode, getCasesByDistrict, getReport, getCaseCountbyMonth } from './controllers/report.controller.js';
+import { getTotalCaseCount, getCasesByPincode, getReport, getCaseCountbyMonth, getCases, getFullReport } from './controllers/report.controller.js';
 import { adminLogin, login, logout, registerDoctor } from './controllers/signup.controller.js';
 import { getLocation } from './controllers/maps.controller.js';
 configDotenv();
@@ -35,12 +35,11 @@ app.put('/updateDoses/:caseId',updateDoseDetails)
 //REPORTS
 app.get('/getCaseCount',getTotalCaseCount);
 app.get('/getCaseCountByMonth',getCaseCountbyMonth);
-app.get('/getCases',getAllCases);
-app.get('/getAllCaseReport',getReport);
-app.get('/getAllCaseReport/:district',getReport);
-app.get('/getCases/:district',getCasesByDistrict);
 app.get('/getCasesByPincode/:pincode',getCasesByPincode)//
 app.get('/getCaseCountByAreas',getLocation)//
+
+app.get('/getCases',getCases)
+app.get('/getFullReport',getFullReport)
 
 
 app.listen(process.env.PORT,() => console.log("Server is running at PORT : " + process.env.PORT))

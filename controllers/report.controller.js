@@ -1,4 +1,4 @@
-import {fetchCasesByPincode, fetchCasesByDistrict, fetchReport, fetchTotalCaseCount, fetchCases, fetchCaseCountByMonth } from "../database-services/report.database.js";
+import {fetchCasesByPincode, fetchTotalCaseCount, fetchCaseCountByMonth, fetchCases, fetchFullReport } from "../database-services/report.database.js";
 import { authorize } from '../utils.js';
 
 
@@ -32,43 +32,6 @@ export const getCaseCountbyMonth = async (req,res) => {
     }
 }
 
-export const getAllCases = async (req,res) => {
-    try {
-        const isAuth = authorize(req.cookies.jwttoken)
-        const LIMIT = 15;
-        const pageNo = req.query.page;
-        if(!isAuth)
-            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
-
-        const records = await fetchCases((pageNo-1)*LIMIT,LIMIT);
-        return res.send(records)
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({Success : false, error : "Unable to fetch cases"})
-    }
-}
-
-export const getCasesByDistrict = async(req,res) => {
-    const district = req.params.district
-    try {
-        const isAuth = authorize(req.cookies.jwttoken)
-        const LIMIT = 15
-        const pageNo = req.query.page
-
-        if(!isAuth)
-            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
-
-        const records = await fetchCasesByDistrict(district,Number(LIMIT),Number((pageNo-1)*LIMIT));
-        if(records.length > 0)
-            res.send(records)
-        else
-            res.status(404).send({Success : false, error : "No cases were found with the district : " + district});
-
-    } catch (error) {
-        console.log("error in fetching cases by district : " + error);
-        res.status(500).send({Success : false,error : "Unexpected error occured during fetching the cases"});
-    }
-}
 
 export const getReport = async (req,res) => {
     const district = req.params?.district
@@ -100,5 +63,52 @@ export const getCasesByPincode = async(req,res) => {
     } catch (error) {
         console.log(error)
         return res.send({Succcess : false, error : "Unexpected error occured"})
+    }
+}
+
+
+export const getCases = async(req,res) => {
+
+    const LIMIT = 15
+    const pageNo = req.query.page
+    //filters
+    const district = req.query?.district
+    const year = req.query?.year
+    const month = req.query?.month
+    try {
+        const isAuth = authorize(req.cookies.jwttoken)
+        if(!isAuth)
+            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
+
+        const records = await fetchCases(district,year,month,Number(LIMIT),Number((pageNo-1)*LIMIT));
+        if(records.length > 0)
+            res.send(records)
+        else
+            res.status(404).send({Success : false, error : "No cases were found with the district : " + district});
+
+    } catch (error) {
+        console.log("error in fetching cases by district : " + error);
+        res.status(500).send({Success : false,error : "Unexpected error occured during fetching the cases"});
+    }
+}
+
+export const getFullReport = async (req,res) => {
+    //filters
+    const district = req.query?.district
+    const year = req.query?.year
+    const month = req.query?.month
+    try {
+        const isAuth = authorize(req.cookies.jwttoken)
+        if(!isAuth)
+            return res.status(401).send({Success : false, error : "User doesn't have the permission"})
+        
+        const records = await fetchFullReport(district,year,month); // returns false in case of error
+        if(records)
+            res.send(records)
+        else
+            res.send({Succcess : false,error : "Unexpected error occured during fetching the report"})
+    } catch (error) {
+        console.log(error)
+        return res.send({Succcess : false, error : "Unexpected error occured during fetching the report"})
     }
 }
